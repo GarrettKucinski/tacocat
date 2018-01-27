@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
-from wtforms.validators import (DataRequired, Email, Length, EqualTo)
-from peewee import *
+from wtforms import (StringField, PasswordField, TextAreaField, BooleanField)
+from wtforms.validators import (DataRequired, ValidationError,
+                                Email, Length, EqualTo)
+from models import User
 
 
 def email_exists(form, field):
@@ -32,3 +33,15 @@ class RegisterForm(FlaskForm):
             DataRequired()
         ]
     )
+
+
+class TacoCatForm(FlaskForm):
+    protein = StringField(u"Protein")
+    shell = StringField(u"Shell")
+    cheese = BooleanField(u"Cheese?")
+    extras = TextAreaField(u"Extras")
+
+
+class LoginForm(FlaskForm):
+    email = StringField(u"Email", validators=[Email(), DataRequired()])
+    password = PasswordField(u"Password", validators=[DataRequired()])

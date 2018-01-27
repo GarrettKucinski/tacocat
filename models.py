@@ -1,3 +1,5 @@
+from flask_login import UserMixin
+from flask_bcrypt import generate_password_hash
 from peewee import *
 
 db = SqliteDatabase('tacocat.db')
@@ -8,9 +10,12 @@ class BaseModel(Model):
         database = db
 
 
-class User(BaseModel):
+class User(UserMixin, BaseModel):
     email = CharField(unique=True)
     password = CharField(max_length=10)
+
+    def get_tacos(self):
+        return Taco.select().where(Taco.user == self)
 
     @classmethod
     def create_user(cls, email, password):
@@ -23,9 +28,13 @@ class User(BaseModel):
 
 
 class Taco(BaseModel):
-    protein = CharField()
-    shell = CharField()
-    cheese = BooleanField()
+    user = ForeignKeyField(
+        rel_model=User,
+        related_name="tacos"
+    )
+    protein = CharField(default='')
+    shell = CharField(default='')
+    cheese = BooleanField(default=False)
     extras = TextField()
 
 
