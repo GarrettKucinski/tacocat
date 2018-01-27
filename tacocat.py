@@ -100,6 +100,7 @@ def create_taco():
         models.Taco.create(
             user=current_user._get_current_object(),
             protein=form.protein.data,
+            shell=form.shell.data,
             cheese=form.cheese.data,
             extras=form.extras.data
         )
